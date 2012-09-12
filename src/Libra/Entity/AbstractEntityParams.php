@@ -48,8 +48,9 @@ class AbstractEntityParams
      */
     protected $params;
     
-    public function getParams()
+    public function getParams($asString = true)
     {
+        if ($asSting) return serialize ($this->params);
         return $this->params;
     }
 
@@ -73,10 +74,10 @@ class AbstractEntityParams
 
     public function getParam($name, $default = null)
     {
-        if (!isset($this->params->$name)) {
+        if (!isset($this->params[$name])) {
             return $default;
         }
-        return $this->params->$name;
+        return $this->params[$name];
     }
 
 }

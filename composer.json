@@ -1,18 +1,18 @@
 {
-    "name":         "libra/",
+    "name":         "libra/libra",
     "type":         "library",
-    //"version":      "0.0.1",
+    "version":      "0.3.0",
     "description":  "Libra CMS, library of code",
-    "keywords":     ["zf", "zf2", "zendframework", "cms"],
+    "keywords":     ["zf", "zf2", "zendframework", "cms", "libra"],
     "homepage":     "http://www.libra-cms.ejoom.com",
     "time":         "2012-05-16",
-    "licence":      "BSD-3-Clause",
+    "license":      "BSD-3-Clause",
     "authors": [
-        {'name': 'duke', 'email': 'duke@ejoom.com', 'role': 'maintainer', 'homepage': 'http://www.ejoom.com'}
+        {"name": "Vitalii Nagara", "email": "duke@ejoom.com", "role": "maintainer, developer", "homepage": ""}
     ],
 
     "require": {
-        "php":          ">=5.3.3"
+        "php": ">=5.3.3"
     },
 
     "require-dev": {
@@ -20,14 +20,15 @@
     },
 
     "autoload": {
-        "psr-0": {"Libra\\Skeleton": "src"}
+        "psr-0": {"Libra": "src"},
+        "classmap": ["Module.php"]
     },
 
     "provide": {
       
     },
 
-    "sugest": {
+    "suggest": {
 
     }
 
