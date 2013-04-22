@@ -191,7 +191,24 @@ class Mvc extends AbstractPage
             );
         }
 
-        $params = $this->getParams();
+        if ($this->get('useRouteMatch') && $this->getRouteMatch() !== null) {
+            $rmParams = $this->getRouteMatch()->getParams();
+
+            if (isset($rmParams[ModuleRouteListener::ORIGINAL_CONTROLLER])) {
+                $rmParams['controller'] = $rmParams[ModuleRouteListener::ORIGINAL_CONTROLLER];
+                unset($rmParams[ModuleRouteListener::ORIGINAL_CONTROLLER]);
+            }
+
+            if (isset($rmParams[ModuleRouteListener::MODULE_NAMESPACE])) {
+                unset($rmParams[ModuleRouteListener::MODULE_NAMESPACE]);
+            }
+
+            $params = array_merge($rmParams, $this->getParams());
+        } else {
+            $params = $this->getParams();
+        }
+
+
         if (($param = $this->getController()) != null) {
             $params['controller'] = $param;
         }
