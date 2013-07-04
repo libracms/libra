@@ -57,7 +57,7 @@ class AbstractEntityParams
     public function setParams($params)
     {
         if ($params === '' || $params === null) $params = new Parameters;
-        if ($params instanceof Prameters) {
+        if ($params instanceof Parameters) {
             $this->params = $params;
         } else if (is_object($params)) {
             $this->params = new Parameters((array)$params);
