@@ -7,67 +7,66 @@
 
 namespace Libra\Mvc\Service;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Zend\Mvc\Exception\RuntimeException;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * AbstractObjectManagerProveder prefer over
- * Class AbstractEntityManagerProvider
+ * Class AbstractObjectManagerProvider
  * @package Libra\Mvc\Service
  */
-class AbstractEntityManagerProvider implements ServiceLocatorAwareInterface
+class AbstractObjectManagerProvider implements ServiceLocatorAwareInterface
 {
     /** @var string */
-    protected $entityName;
+    protected $objectClassName;
 
-    /** @var EntityManager */
-    protected $entityManager;
+    /** @var ObjectManager */
+    protected $objectManager;
 
-    /** @var EntityRepository */
+    /** @var ObjectRepository */
     protected $repository;
 
     /** @var ServiceLocatorInterface */
     protected $serviceLocator = null;
 
-    public function getEntityManager()
+    public function getObjectManager()
     {
-        if ($this->entityManager === null) {
-            $this->entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        if ($this->objectManager === null) {
+            $this->objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         }
 
-        return $this->entityManager;
+        return $this->objectManager;
     }
 
-    public function setEntityManager(EntityManager $entityManager)
+    public function setObjectManager(ObjectManager $objectManager)
     {
-        $this->entityManager = $entityManager;
+        $this->objectManager = $objectManager;
 
         return $this;
     }
 
     public function getRepository()
     {
-        if ($this->entityName === null) {
-            throw new RuntimeException('No $entityName specified');
+        if ($this->objectClassName === null) {
+            throw new RuntimeException('No $objectName specified');
         }
         if ($this->repository === null) {
-            $this->repository = $this->getEntityManager()->getRepository($this->entityName);
+            $this->repository = $this->getObjectManager()->getRepository($this->objectClassName);
         }
 
         return $this->repository;
     }
 
-    public function getEntityName()
+    public function getObjectClassName()
     {
-        return $this->entityName;
+        return $this->objectClassName;
     }
 
-    public function setEntityName($entityName)
+    public function setObjectClassName($objectClassName)
     {
-        $this->entityName = $entityName;
+        $this->objectClassName = $objectClassName;
         $this->repository = null;
 
         return $this;
