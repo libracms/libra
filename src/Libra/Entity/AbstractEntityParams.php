@@ -33,7 +33,6 @@
 namespace Libra\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Stdlib\Parameters;
 
 /**
  * Add params field to entity. There you can put any number of field.
@@ -44,58 +43,51 @@ use Zend\Stdlib\Parameters;
 class AbstractEntityParams
 {
     /**
-     * @ORM\Column(type="parameters", nullable=true)
-     * @var \Zend\Stdlib\Parameters
+     * @ORM\Column(type="json_array", nullable=true)
+     * @var array
      */
-    protected $params;
-
-    public function __construct()
-    {
-        $this->params = new Parameters;
-    }
+    protected $params = array();
 
     public function getParams()
     {
-        //Doctrine get it from DB as array. So transform to Parameters
-        if (is_array($this->params)) {
-            $this->params = new Parameters($this->params);
-        }
-
         return $this->params;
     }
 
     /**
-     * Set Params instance to entity
-     * @param Parameters|array $params
+     * Set array of parameters
+     * @param array $params
      * @return \Libra\Entity\AbstractEntityParams
      */
-    public function setParams($params)
+    public function setParams(array $params)
     {
-        if ($params instanceof Parameters) {
-            $this->params = $params;
-        } elseif (is_array($params)) {
-            $this->params = new Parameters($params);
-        } elseif (is_object($params)) {
-            $this->params = new Parameters((array)$params);
-        } else {
-            throw new Exception(sprintf('"%s" isn\'t an array or Parameters instance', $params));
-        }
+        $this->params = $params;
 
         return $this;
     }
 
     /**
-     * @deprecated since version 0.4. Use getParams()->get($name, default) instead.
-     * @param type $name
-     * @param type $default
-     * @return type
+     * Get single parameter
+     * @param string $name
+     * @param mixed $default optional default value
+     * @return mixed
      */
     public function getParam($name, $default = null)
     {
         if (!isset($this->params[$name])) {
             return $default;
         }
+
         return $this->params[$name];
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return Parameters
+     */
+    public function setParam($name, $value)
+    {
+        $this->params[$name] = $value;
+        return $this;
+    }
 }
