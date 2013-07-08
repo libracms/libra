@@ -36,42 +36,60 @@ use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\Parameters;
 
 /**
- * Add params field to entity
+ * Add params field to entity. There you can put any number of field.
+ * Useful for entities with unlimited fields that won't be indexed.
  *
  * @author duke
  */
 class AbstractEntityParams
 {
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="parameters", nullable=true)
      * @var \Zend\Stdlib\Parameters
      */
     protected $params;
-    
-    public function getParams($asString = true)
+
+    public function __construct()
     {
-        if ($asSting) return serialize ($this->params);
+        $this->params = new Parameters;
+    }
+
+    public function getParams()
+    {
+        //Doctrine get it from DB as array. So transform to Parameters
+        if (is_array($this->params)) {
+            $this->params = new Parameters($this->params);
+        }
+
         return $this->params;
     }
 
+    /**
+     * Set Params instance to entity
+     * @param Parameters|array $params
+     * @return \Libra\Entity\AbstractEntityParams
+     */
     public function setParams($params)
     {
-        if ($params === '' || $params === null) $params = new Parameters;
         if ($params instanceof Parameters) {
             $this->params = $params;
-        } else if (is_object($params)) {
-            $this->params = new Parameters((array)$params);
-        } else if (is_array($params)) {
+        } elseif (is_array($params)) {
             $this->params = new Parameters($params);
+        } elseif (is_object($params)) {
+            $this->params = new Parameters((array)$params);
         } else {
-            $this->params = unserialize($params);
-            if ($this->params === false) {
-                trigger_error('Can\'t unserialize params');
-            }
+            throw new Exception(sprintf('"%s" isn\'t an array or Parameters instance', $params));
         }
+
         return $this;
     }
 
+    /**
+     * @deprecated since version 0.4. Use getParams()->get($name, default) instead.
+     * @param type $name
+     * @param type $default
+     * @return type
+     */
     public function getParam($name, $default = null)
     {
         if (!isset($this->params[$name])) {
