@@ -17,11 +17,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Class AbstractObjectManagerProvider
  * @package Libra\Mvc\Service
  */
-class AbstractObjectManagerProvider implements ServiceLocatorAwareInterface
+abstract class AbstractObjectManagerProvider implements ServiceLocatorAwareInterface
 {
-    /** @var string */
-    protected $objectClassName;
-
     /** @var ObjectManager */
     protected $objectManager;
 
@@ -49,28 +46,21 @@ class AbstractObjectManagerProvider implements ServiceLocatorAwareInterface
 
     public function getRepository()
     {
-        if ($this->objectClassName === null) {
-            throw new RuntimeException('No $objectName specified');
+        if ($this->getObjectClassName() === null) {
+            throw new RuntimeException('No Object Class Name specified');
         }
         if ($this->repository === null) {
-            $this->repository = $this->getObjectManager()->getRepository($this->objectClassName);
+            $this->repository = $this->getObjectManager()->getRepository($this->getObjectClassName());
         }
 
         return $this->repository;
     }
 
-    public function getObjectClassName()
-    {
-        return $this->objectClassName;
-    }
-
-    public function setObjectClassName($objectClassName)
-    {
-        $this->objectClassName = $objectClassName;
-        $this->repository = null;
-
-        return $this;
-    }
+    /**
+     * @abstract
+     * @return string Object Class Name
+     */
+    abstract public function getObjectClassName();
 
     /**
      * Set service locator

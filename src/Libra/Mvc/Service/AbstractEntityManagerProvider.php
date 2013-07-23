@@ -18,11 +18,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * Class AbstractEntityManagerProvider
  * @package Libra\Mvc\Service
  */
-class AbstractEntityManagerProvider implements ServiceLocatorAwareInterface
+abstract class AbstractEntityManagerProvider implements ServiceLocatorAwareInterface
 {
-    /** @var string */
-    protected $entityName;
-
     /** @var EntityManager */
     protected $entityManager;
 
@@ -50,28 +47,21 @@ class AbstractEntityManagerProvider implements ServiceLocatorAwareInterface
 
     public function getRepository()
     {
-        if ($this->entityName === null) {
-            throw new RuntimeException('No $entityName specified');
+        if ($this->getEntityName() === null) {
+            throw new RuntimeException('No Entity Name specified');
         }
         if ($this->repository === null) {
-            $this->repository = $this->getEntityManager()->getRepository($this->entityName);
+            $this->repository = $this->getEntityManager()->getRepository($this->getEntityName());
         }
 
         return $this->repository;
     }
 
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
-
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-        $this->repository = null;
-
-        return $this;
-    }
+    /**
+     * @abstract
+     * @return string Entity Class Name
+     */
+    abstract public function getEntityName();
 
     /**
      * Set service locator
