@@ -29,6 +29,9 @@ abstract class AbstractEntityManagerProvider implements ServiceLocatorAwareInter
     /** @var ServiceLocatorInterface */
     protected $serviceLocator = null;
 
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
     public function getEntityManager()
     {
         if ($this->entityManager === null) {
@@ -45,6 +48,10 @@ abstract class AbstractEntityManagerProvider implements ServiceLocatorAwareInter
         return $this;
     }
 
+    /**
+     * @return \Doctrine\ORM\EntityRepository
+     * @throws RuntimeException
+     */
     public function getRepository()
     {
         if ($this->getEntityName() === null) {
